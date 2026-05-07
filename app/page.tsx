@@ -1,9 +1,3 @@
-import { redirect } from 'next/navigation'
-
-export default function Home() {
-  redirect('/dashboard')
-}
-
 import { supabase } from '@/lib/supabase'
 import type { Jugador } from '@/lib/jugadores'
 
@@ -197,7 +191,6 @@ export default async function Home() {
                         }`}
                       >
 
-                        {/* POSICION */}
                         <td className="px-6 py-5">
 
                           {idx < 3 ? (
@@ -212,7 +205,6 @@ export default async function Home() {
 
                         </td>
 
-                        {/* JUGADOR */}
                         <td className="px-6 py-5">
 
                           <div className="flex items-center gap-4">
@@ -253,7 +245,6 @@ export default async function Home() {
 
                         </td>
 
-                        {/* GOLES */}
                         <td className="px-4 py-5 text-center">
 
                           <span className={`text-3xl font-black ${
@@ -266,7 +257,6 @@ export default async function Home() {
 
                         </td>
 
-                        {/* ASIST */}
                         <td className="px-4 py-5 text-center">
 
                           <span className="text-green-300 font-bold">
@@ -275,7 +265,6 @@ export default async function Home() {
 
                         </td>
 
-                        {/* PARTIDOS */}
                         <td className="px-4 py-5 text-center">
 
                           <span className="text-green-500 font-bold">
@@ -284,7 +273,6 @@ export default async function Home() {
 
                         </td>
 
-                        {/* PROMEDIO */}
                         <td className="px-4 py-5 text-center">
 
                           <span className="text-green-400 font-bold tabular-nums">

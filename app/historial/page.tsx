@@ -1,4 +1,4 @@
-import { createSupabaseServer } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import type { Partido } from '@/lib/historial'
 
@@ -11,7 +11,6 @@ function formatFecha(fecha: string) {
 }
 
 export default async function HistorialPage() {
-  const supabase = createSupabaseServer()
   const { data } = await supabase
     .from('partidos')
     .select('*')
