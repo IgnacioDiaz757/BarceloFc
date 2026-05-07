@@ -2,13 +2,13 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { createSupabaseServer } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 export async function registrarPartido(
   prevState: string | null,
   formData: FormData
 ): Promise<string | null> {
-  const supabase = createSupabaseServer()
+
 
   const fecha           = formData.get('fecha') as string
   const equipo1_nombre  = (formData.get('equipo1_nombre') as string).trim()
@@ -48,7 +48,7 @@ export async function votarMVP(
   prevState: string | null,
   formData: FormData
 ): Promise<string | null> {
-  const supabase = createSupabaseServer()
+
 
   const votante_id = formData.get('votante_id') as string
   const mvp_id     = formData.get('mvp_id') as string
