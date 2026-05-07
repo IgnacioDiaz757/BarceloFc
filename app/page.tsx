@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import type { Jugador } from '@/lib/jugadores'
+import Link from 'next/link'
 
 const POSICION_BADGE: Record<string, string> = {
   Delantero: 'bg-red-900/60 text-red-300',
@@ -207,9 +208,9 @@ export default async function Home() {
 
                         <td className="px-6 py-5">
 
-                          <div className="flex items-center gap-4">
+                          <Link href={`/jugadores/${jugador.id}`} className="flex items-center gap-4 group">
 
-                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-sm shadow-lg ${
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-sm shadow-lg transition-transform group-hover:scale-105 ${
                               isTop
                                 ? 'bg-amber-500 text-black'
                                 : 'bg-green-800 text-white'
@@ -219,7 +220,7 @@ export default async function Home() {
 
                             <div>
 
-                              <p className={`font-bold text-lg ${
+                              <p className={`font-bold text-lg group-hover:underline underline-offset-2 ${
                                 isTop
                                   ? 'text-amber-400'
                                   : 'text-white'
@@ -241,7 +242,7 @@ export default async function Home() {
 
                             </div>
 
-                          </div>
+                          </Link>
 
                         </td>
 

@@ -4,9 +4,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const links = [
-  { href: '/',        label: 'Dashboard' },
-  { href: '/partidos', label: 'Partidos' },
-  { href: '/admin',   label: 'Admin' },
+  { href: '/',          label: 'Dashboard' },
+  { href: '/partidos',  label: 'Partidos' },
+  { href: '/historial', label: 'Historial' },
+  { href: '/jugadores', label: 'Jugadores' },
+  { href: '/admin',     label: 'Admin' },
 ]
 
 export default function Navbar() {

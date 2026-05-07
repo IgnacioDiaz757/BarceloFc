@@ -17,6 +17,7 @@ const inputClass =
 
 export function JugadorRow({ jugador }: { jugador: Jugador }) {
   const [editando, setEditando] = useState(false)
+  const [preview, setPreview] = useState<string | null>(null)
 
   const boundAction = actualizarJugador.bind(null, jugador.id)
   const [error, action, pending] = useActionState(boundAction, null)
@@ -25,35 +26,53 @@ export function JugadorRow({ jugador }: { jugador: Jugador }) {
   useEffect(() => {
     if (wasPending.current && !pending && !error) {
       setEditando(false)
+      setPreview(null)
     }
     wasPending.current = pending
   }, [pending, error])
 
   const initials = jugador.nombre.split(' ').map((n: string) => n[0]).join('')
   const deleteAction = eliminarJugador.bind(null, jugador.id)
+  const avatarSrc = preview ?? jugador.foto_url ?? null
 
   if (editando) {
     return (
       <div className="px-6 py-4 bg-green-900/20 border-b border-green-900/60 last:border-b-0">
         <form action={action} className="space-y-3">
+          {/* Foto */}
+          <div>
+            <label className="block text-green-500 text-xs mb-1">Foto</label>
+            <div className="flex items-center gap-3">
+              {avatarSrc ? (
+                <img src={avatarSrc} alt="" className="w-12 h-12 rounded-full object-cover border border-green-700 shrink-0" />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-green-800 flex items-center justify-center text-white font-semibold text-sm shrink-0">
+                  {initials}
+                </div>
+              )}
+              <input
+                type="file"
+                name="foto"
+                accept="image/*"
+                onChange={e => {
+                  const file = e.target.files?.[0]
+                  setPreview(file ? URL.createObjectURL(file) : null)
+                }}
+                className="text-green-400 text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-green-800 file:text-green-300 file:text-xs hover:file:bg-green-700 cursor-pointer"
+              />
+            </div>
+          </div>
+
           {/* Nombre y posición */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-green-500 text-xs mb-1">Nombre</label>
-              <input
-                name="nombre"
-                type="text"
-                defaultValue={jugador.nombre}
-                required
-                className={inputClass}
-              />
+              <input name="nombre" type="text" defaultValue={jugador.nombre} required className={inputClass} />
             </div>
             <div>
               <label className="block text-green-500 text-xs mb-1">Posición</label>
               <select name="posicion" defaultValue={jugador.posicion} className={inputClass}>
-                {POSICIONES.map(p => (
-                  <option key={p} value={p}>{p}</option>
-                ))}
+                {POSICIONES.map(p => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
           </div>
@@ -61,30 +80,21 @@ export function JugadorRow({ jugador }: { jugador: Jugador }) {
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3">
             {[
-              { name: 'goles',        label: 'Goles',       value: jugador.goles },
-              { name: 'asistencias',  label: 'Asistencias', value: jugador.asistencias },
-              { name: 'partidos',     label: 'Partidos (PJ)', value: jugador.partidos },
+              { name: 'goles',       label: 'Goles',         value: jugador.goles },
+              { name: 'asistencias', label: 'Asistencias',   value: jugador.asistencias },
+              { name: 'partidos',    label: 'Partidos (PJ)', value: jugador.partidos },
             ].map(({ name, label, value }) => (
               <div key={name}>
                 <label className="block text-green-500 text-xs mb-1">{label}</label>
-                <input
-                  name={name}
-                  type="number"
-                  min={0}
-                  defaultValue={value}
-                  className={inputClass}
-                />
+                <input name={name} type="number" min={0} defaultValue={value} className={inputClass} />
               </div>
             ))}
           </div>
 
           {error && (
-            <p className="text-red-400 text-xs bg-red-950/40 border border-red-800/40 rounded px-3 py-1.5">
-              {error}
-            </p>
+            <p className="text-red-400 text-xs bg-red-950/40 border border-red-800/40 rounded px-3 py-1.5">{error}</p>
           )}
 
-          {/* Actions */}
           <div className="flex gap-2 pt-1">
             <button
               type="submit"
@@ -95,7 +105,7 @@ export function JugadorRow({ jugador }: { jugador: Jugador }) {
             </button>
             <button
               type="button"
-              onClick={() => setEditando(false)}
+              onClick={() => { setEditando(false); setPreview(null) }}
               disabled={pending}
               className="px-4 py-1.5 bg-green-900/40 hover:bg-green-800/40 text-green-300 rounded-lg text-sm transition-colors"
             >
@@ -111,9 +121,13 @@ export function JugadorRow({ jugador }: { jugador: Jugador }) {
     <div className="px-6 py-4 flex items-center justify-between gap-4 hover:bg-green-900/10 transition-colors border-b border-green-900/60 last:border-b-0">
       {/* Avatar + nombre */}
       <div className="flex items-center gap-3 min-w-0">
-        <div className="w-9 h-9 rounded-full bg-green-800 flex items-center justify-center text-white font-semibold text-xs shrink-0">
-          {initials}
-        </div>
+        {jugador.foto_url ? (
+          <img src={jugador.foto_url} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
+        ) : (
+          <div className="w-9 h-9 rounded-full bg-green-800 flex items-center justify-center text-white font-semibold text-xs shrink-0">
+            {initials}
+          </div>
+        )}
         <div className="min-w-0">
           <p className="text-white font-medium text-sm truncate">{jugador.nombre}</p>
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${POSICION_BADGE[jugador.posicion]}`}>
@@ -139,7 +153,6 @@ export function JugadorRow({ jugador }: { jugador: Jugador }) {
           </div>
         </div>
 
-        {/* Edit */}
         <button
           onClick={() => setEditando(true)}
           className="p-2 text-green-600 hover:text-green-300 hover:bg-green-800/40 rounded-lg transition-colors"
@@ -150,7 +163,6 @@ export function JugadorRow({ jugador }: { jugador: Jugador }) {
           </svg>
         </button>
 
-        {/* Delete */}
         <form action={deleteAction}>
           <button
             type="submit"

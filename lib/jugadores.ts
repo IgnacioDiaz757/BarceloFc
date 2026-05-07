@@ -19,5 +19,6 @@ export type Jugador = {
   asistencias: number
   partidos: number
   mvps: number
+  foto_url?: string
   created_at?: string
 }
