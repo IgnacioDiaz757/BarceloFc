@@ -117,7 +117,9 @@ export default async function JugadorPage({
   }
 
   const j = rawJugador as Jugador
-  const historial = ((rawHistorial ?? []) as PartidoRow[])
+  const historial = ((rawHistorial ?? []) as Array<{ equipo: 1 | 2; partido: PartidoRow['partido'][] | null }>)
+    .filter(h => h.partido?.[0])
+    .map(h => ({ equipo: h.equipo, partido: h.partido![0] } as PartidoRow))
     .sort((a, b) => b.partido.fecha.localeCompare(a.partido.fecha))
 
   // ── Computed stats ──────────────────────────────────────────────────────────

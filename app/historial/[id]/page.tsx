@@ -50,11 +50,20 @@ export default async function PartidoPage({
     )
   }
 
-  type PJRow = { equipo: number; jugador: Jugador }
-  const rows: PJRow[] = (pjData ?? []) as PJRow[]
+  type PJRow = {
+  equipo: number
+  jugador: Jugador[]
+}
 
-  const equipo1: Jugador[] = rows.filter(r => r.equipo === 1).map(r => r.jugador)
-  const equipo2: Jugador[] = rows.filter(r => r.equipo === 2).map(r => r.jugador)
+const rows = (pjData ?? []) as PJRow[]
+
+const equipo1: Jugador[] = rows
+  .filter(r => r.equipo === 1)
+  .flatMap(r => r.jugador)
+
+const equipo2: Jugador[] = rows
+  .filter(r => r.equipo === 2)
+  .flatMap(r => r.jugador)
   const todosJugadores: Jugador[] = [...equipo1, ...equipo2]
   const votos: VotoMVP[] = (votosData ?? []) as VotoMVP[]
 
