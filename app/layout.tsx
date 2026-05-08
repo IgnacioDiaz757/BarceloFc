@@ -36,8 +36,8 @@ export default async function RootLayout({
   return (
     <html lang="es" className={`${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-[#060f08]">
-        <Navbar />
-        {needsProfile && <ProfileSetupModal />}
+        {user && <Navbar />}
+        {user && needsProfile && <ProfileSetupModal />}
         <main className="flex-1">{children}</main>
       </body>
     </html>

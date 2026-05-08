@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PROTECTED = ['/admin', '/historial/nuevo', '/partidos']
+const PUBLIC_ROUTES = ['/login', '/register']
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request })
@@ -29,13 +29,17 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
-  const needsAuth = PROTECTED.some(p => pathname.startsWith(p))
+  const isPublic = PUBLIC_ROUTES.some(p => pathname.startsWith(p))
 
-  if (needsAuth && !user) {
+  if (!user && !isPublic) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     url.searchParams.set('redirect', pathname)
     return NextResponse.redirect(url)
+  }
+
+  if (user && isPublic) {
+    return NextResponse.redirect(new URL('/', request.nextUrl))
   }
 
   return response
